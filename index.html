@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Enterprise Solutions PLC | Ethiopia's Digital Transformation Partner</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0d;
+    --surface:#131318;
+    --surface-2:#1b1b22;
+    --line:rgba(255,255,255,0.08);
+    --line-strong:rgba(255,255,255,0.14);
+    --red:#e8384f;
+    --red-deep:#7a1220;
+    --red-glow:#ff5468;
+    --text:#f3f1ee;
+    --text-muted:#98979f;
+    --text-dim:#68676f;
+    --radius:2px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.02em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){ .wrap{padding:0 24px;} }
+
+  /* background texture */
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(232,56,79,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,56,79,0.035) 1px, transparent 1px);
+    background-size:64px 64px;
+    pointer-events:none;
+    z-index:0;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent 70%);
+  }
+
+  /* ===== NAV ===== */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:22px 0;
+    transition:all .35s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{
+    background:rgba(10,10,13,0.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+  }
+  nav{display:flex; align-items:center; justify-content:space-between;}
+  .logo{display:flex; align-items:center; gap:10px; font-size:19px; font-weight:700; letter-spacing:0.02em;}
+  .logo-mark{
+    width:30px; height:30px; background:var(--red);
+    position:relative; flex-shrink:0;
+    clip-path:polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+  }
+  .logo-sub{font-size:10px; color:var(--text-dim); font-weight:500; letter-spacing:0.08em; text-transform:uppercase; margin-left:2px; display:block;}
+  .nav-links-desktop{display:flex; gap:36px; align-items:center;}
+  .nav-links-desktop a{font-size:14px; color:var(--text-muted); font-weight:500; transition:color .2s;}
+  .nav-links-desktop a:hover{color:var(--text);}
+  .nav-cta{
+    background:var(--red); color:#fff !important; padding:10px 20px;
+    font-size:13px; font-weight:600; border-radius:var(--radius);
+    transition:background .2s;
+  }
+  .nav-cta:hover{background:var(--red-glow);}
+  .burger{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; z-index:200; position:relative;}
+  .burger span{width:24px; height:2px; background:var(--text); transition:transform .25s ease, opacity .25s ease;}
+  .burger.open{opacity:0; visibility:hidden; pointer-events:none;}
+
+  .nav-links{
+    position:fixed; inset:0; z-index:150;
+    background:var(--bg);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    opacity:0; visibility:hidden; transform:translateY(-10px);
+    transition:opacity .3s ease, visibility .3s ease, transform .3s ease;
+  }
+  .nav-links.open{opacity:1; visibility:visible; transform:none;}
+  .nav-links-top{
+    position:absolute; top:0; left:0; right:0;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 32px; border-bottom:1px solid var(--line);
+  }
+  .nav-close{
+    background:none; border:1px solid var(--line-strong); color:var(--text);
+    width:38px; height:38px; font-size:22px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; border-radius:var(--radius);
+    transition:border-color .2s, color .2s;
+  }
+  .nav-close:hover{border-color:var(--red); color:var(--red-glow);}
+  .nav-links-inner{display:flex; flex-direction:column; align-items:stretch; width:100%; max-width:380px; padding:0 32px;}
+  .nav-links-inner a{
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    padding:22px 0; border-bottom:1px solid var(--line);
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; color:var(--text);
+    transition:color .2s;
+  }
+  .nav-links-inner a:first-child{border-top:1px solid var(--line);}
+  .nav-links-inner a:hover{color:var(--red-glow);}
+  .nav-links-inner a:hover .nl-index{color:var(--red);}
+  .nl-index{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); width:22px; text-align:right; transition:color .2s;}
+  .nl-label{width:150px; text-align:left;}
+  .nav-links-foot{
+    display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:36px;
+  }
+  .nav-links-foot .mono{font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em;}
+  .nav-links-foot a{font-size:15px; color:var(--red-glow); font-weight:600;}
+
+  @media (max-width:880px){
+    .nav-links-desktop{display:none;}
+    .burger{display:flex;}
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative; z-index:1;
+    padding-top:170px; padding-bottom:100px;
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:40px; align-items:center;
+  }
+  @media (max-width:980px){ .hero{grid-template-columns:1fr; padding-top:140px; padding-bottom:60px;} }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--red-glow);
+    text-transform:uppercase; letter-spacing:0.12em; margin-bottom:22px;
+  }
+  .eyebrow::before{content:''; width:7px; height:7px; background:var(--red); display:inline-block; animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.3;}}
+
+  .hero h1{
+    font-size:clamp(34px, 5vw, 58px);
+    line-height:1.05;
+    margin-bottom:22px;
+  }
+  .hero h1 em{color:var(--red); font-style:normal; position:relative;}
+  .hero p.lead{font-size:17px; color:var(--text-muted); max-width:480px; margin-bottom:34px;}
+  .btn-row{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn{
+    padding:14px 26px; font-size:14px; font-weight:600; border-radius:var(--radius);
+    display:inline-flex; align-items:center; gap:8px; transition:all .2s; cursor:pointer; border:1px solid transparent;
+    background:transparent; font-family:inherit;
+  }
+  .btn-primary{background:var(--red); color:#fff;}
+  .btn-primary:hover{background:var(--red-glow); transform:translateY(-1px);}
+  .btn-ghost{border:1px solid var(--line-strong); color:var(--text);}
+  .btn-ghost:hover{border-color:var(--red); color:var(--red-glow);}
+
+  /* network diagram */
+  .network{position:relative; aspect-ratio:1/1; max-width:460px; margin:0 auto;}
+  .network svg{width:100%; height:100%;}
+  .net-line{stroke:var(--line-strong); stroke-width:1; fill:none;}
+  .net-line.active{stroke:var(--red); opacity:0.55; stroke-dasharray:4 4; animation:dash 22s linear infinite;}
+  @keyframes dash{to{stroke-dashoffset:-400;}}
+  .net-node{fill:var(--surface-2); stroke:var(--line-strong); stroke-width:1;}
+  .net-node.core{fill:var(--red); stroke:var(--red-glow);}
+  .net-label{font-family:'IBM Plex Mono',monospace; font-size:9.5px; fill:var(--text-muted); text-transform:uppercase; letter-spacing:0.03em;}
+  .net-label.core{fill:#fff; font-weight:600; font-size:11px; text-anchor:middle;}
+  .net-pulse{animation:pulsecircle 3s ease-in-out infinite;}
+  @keyframes pulsecircle{0%,100%{r:5;} 50%{r:7;}}
+
+  /* ===== STATS BAR ===== */
+  .stats-bar{
+    position:relative; z-index:1; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--surface);
+  }
+  .stats-grid{
+    display:grid; grid-template-columns:repeat(4,1fr);
+  }
+  .stat{padding:34px 24px; text-align:center; border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:var(--red-glow);}
+  .stat .lbl{font-size:12.5px; color:var(--text-muted); margin-top:6px;}
+  @media (max-width:700px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .stat{border-right:1px solid var(--line);}
+    .stat:nth-child(2n){border-right:none;}
+    .stat:nth-child(n+3){border-top:1px solid var(--line);}
+  }
+
+  /* ===== SECTION GENERIC ===== */
+  section{position:relative; z-index:1;}
+  .section{padding:110px 0;}
+  @media (max-width:700px){ .section{padding:70px 0;} }
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-tag{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--red-glow); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:14px;}
+  .section-head h2{font-size:clamp(26px,3.4vw,40px); margin-bottom:16px;}
+  .section-head p{color:var(--text-muted); font-size:16px;}
+
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  /* services grid */
+  .services-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media (max-width:900px){ .services-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:600px){ .services-grid{grid-template-columns:1fr;} }
+  .service-card{background:var(--surface); padding:34px 28px; transition:background .25s;}
+  .service-card:hover{background:var(--surface-2);}
+  .service-num{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); margin-bottom:24px; display:block;}
+  .service-icon{width:38px; height:38px; margin-bottom:20px; color:var(--red-glow);}
+  .service-card h3{font-size:18px; margin-bottom:10px;}
+  .service-card p{font-size:14px; color:var(--text-muted);}
+
+  /* split panels */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  @media (max-width:880px){ .split{grid-template-columns:1fr; gap:36px;} .split .media-frame{order:-1;} }
+  .split.rev{direction:rtl;} .split.rev > *{direction:ltr;}
+  .media-frame{position:relative; overflow:hidden; border:1px solid var(--line-strong);}
+  .media-frame img{width:100%; height:100%; object-fit:cover; filter:grayscale(0.55) contrast(1.15) brightness(0.65);}
+  .media-frame::after{content:''; position:absolute; inset:0; background:linear-gradient(160deg, rgba(232,56,79,0.25), rgba(10,10,13,0.55) 70%); mix-blend-mode:multiply;}
+  .media-frame::before{content:''; position:absolute; top:14px; left:14px; right:14px; bottom:14px; border:1px solid rgba(255,255,255,0.15); z-index:2; pointer-events:none;}
+
+  .check-list{list-style:none; margin-top:26px; display:flex; flex-direction:column; border-top:1px solid var(--line);}
+  .check-list li{display:flex; gap:20px; align-items:flex-start; padding:18px 0; border-bottom:1px solid var(--line);}
+  .check-list .cl-index{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--red-glow); flex-shrink:0; width:22px; padding-top:3px;}
+  .check-list li div{font-size:15px; color:var(--text-muted); line-height:1.6;}
+  .check-list li b{color:var(--text); font-weight:600;}
+
+  /* training programs */
+  /* custom training block */
+  .custom-training{
+    border:1px solid var(--line); background:var(--surface);
+    padding:48px; position:relative;
+  }
+  .custom-training::before{
+    content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--red);
+  }
+  .ct-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:50px; align-items:center;}
+  @media (max-width:880px){ .ct-grid{grid-template-columns:1fr; gap:30px;} }
+  .custom-training h3{font-size:22px; margin-bottom:14px;}
+  .custom-training p{font-size:15.5px; color:var(--text-muted); max-width:460px;}
+  .ct-tags{display:flex; flex-wrap:wrap; gap:10px;}
+  .ct-tags .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--text-muted);
+    border:1px solid var(--line-strong); padding:9px 14px; border-radius:var(--radius);
+    white-space:nowrap;
+  }
+  .ct-tags .tag:last-child{color:var(--red-glow); border-color:var(--red);}
+  @media (max-width:520px){ .custom-training{padding:30px 24px;} }
+
+  /* process steps */
+  .process{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media (max-width:960px){ .process{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .process{grid-template-columns:1fr;} }
+  .step{background:var(--surface); padding:30px 22px; position:relative;}
+  .step .step-n{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--surface-2); -webkit-text-stroke:1px var(--red); color:transparent; display:block; margin-bottom:16px;}
+  .step h4{font-size:15.5px; margin-bottom:8px;}
+  .step p{font-size:13px; color:var(--text-muted);}
+
+  /* CTA banner */
+  .cta-banner{
+    background:linear-gradient(120deg, var(--red-deep), #401014 60%, var(--bg));
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:90px 0; text-align:center;
+  }
+  .cta-banner h2{font-size:clamp(26px,4vw,42px); margin-bottom:18px;}
+  .cta-banner p{color:rgba(255,255,255,0.75); margin-bottom:34px; font-size:16px;}
+  .cta-row{display:flex; justify-content:center; gap:16px; flex-wrap:wrap;}
+  .btn-light{background:#fff; color:#0a0a0d;}
+  .btn-light:hover{background:var(--text); }
+
+  /* footer */
+  footer{background:var(--surface); border-top:1px solid var(--line); padding:70px 0 30px;}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; margin-bottom:60px;}
+  @media (max-width:800px){ .foot-grid{grid-template-columns:1fr 1fr; row-gap:36px;} }
+  @media (max-width:480px){ .foot-grid{grid-template-columns:1fr;} }
+  .foot-brand p{color:var(--text-muted); font-size:14px; margin-top:16px; max-width:280px;}
+  .foot-col h5{font-family:'IBM Plex Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-dim); margin-bottom:18px;}
+  .foot-col a, .foot-col p{display:block; font-size:14px; color:var(--text-muted); margin-bottom:11px;}
+  .foot-col a:hover{color:var(--red-glow);}
+  .foot-bottom{border-top:1px solid var(--line); padding-top:24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:12.5px; color:var(--text-dim);}
+
+  ::selection{background:var(--red); color:#fff;}
+
+  /* ===== MODALS ===== */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:300;
+    background:rgba(5,5,7,0.78);
+    backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; visibility:hidden;
+    transition:opacity .25s ease, visibility .25s ease;
+    padding:24px;
+  }
+  .modal-overlay.open{opacity:1; visibility:visible;}
+  .modal-box{
+    background:var(--surface); border:1px solid var(--line-strong);
+    max-width:540px; width:100%; max-height:88vh; overflow-y:auto;
+    padding:40px; position:relative;
+    transform:translateY(14px); transition:transform .25s ease;
+  }
+  @media (max-width:560px){ .modal-box{padding:28px 22px;} }
+  .modal-overlay.open .modal-box{transform:none;}
+  .modal-close{
+    position:absolute; top:18px; right:18px;
+    background:none; border:1px solid var(--line-strong); color:var(--text);
+    width:34px; height:34px; font-size:20px; line-height:1; cursor:pointer; border-radius:var(--radius);
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s, color .2s;
+  }
+  .modal-close:hover{border-color:var(--red); color:var(--red-glow);}
+  .modal-box h3{font-size:22px; margin-bottom:10px; padding-right:36px;}
+  .modal-box > p{font-size:14px; color:var(--text-muted); margin-bottom:26px; line-height:1.6;}
+  .modal-box form{display:flex; flex-direction:column; gap:16px;}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:480px){ .form-row{grid-template-columns:1fr;} }
+  .modal-box label{
+    display:flex; flex-direction:column; gap:8px; font-size:11.5px; color:var(--text-dim);
+    font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.07em;
+  }
+  .modal-box input, .modal-box select, .modal-box textarea{
+    background:var(--surface-2); border:1px solid var(--line-strong); color:var(--text);
+    padding:12px 14px; font-family:'Inter',sans-serif; font-size:14.5px; font-weight:400;
+    text-transform:none; letter-spacing:normal; border-radius:var(--radius); width:100%;
+  }
+  .modal-box input:focus, .modal-box select:focus, .modal-box textarea:focus{outline:none; border-color:var(--red);}
+  .modal-box textarea{resize:vertical; min-height:90px; font-family:'Inter',sans-serif;}
+  .modal-box select{cursor:pointer;}
+  .modal-box .btn{margin-top:6px; justify-content:center; width:100%; border:none; cursor:pointer;}
+  .form-note{font-size:12.5px; color:var(--red-glow); text-align:center; opacity:0; height:0; overflow:hidden; transition:opacity .2s ease;}
+  .form-note.show{opacity:1; height:auto; margin-top:-6px;}
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <nav>
+      <div class="logo">
+        <span class="logo-mark"></span>
+        <span><span style="color:var(--red);">DES</span> <span style="color:var(--text); font-weight:600;">PLC</span><span class="logo-sub"> Digital Enterprise Solutions</span></span>
+      </div>
+      <div class="nav-links-desktop">
+        <a href="#services">Services</a>
+        <a href="#training">Training</a>
+        <a href="#approach">Approach</a>
+        <a href="#about">About</a>
+        <a href="#contact" class="nav-cta">Contact us</a>
+      </div>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<div class="nav-links" id="navLinks">
+  <div class="nav-links-top">
+    <div class="logo">
+      <span class="logo-mark"></span>
+      <span><span style="color:var(--red);">DES</span> <span style="color:var(--text); font-weight:600;">PLC</span></span>
+    </div>
+    <button class="nav-close" id="navClose" aria-label="Close menu">&times;</button>
+  </div>
+  <div class="nav-links-inner">
+    <a href="#services"><span class="nl-index">01</span><span class="nl-label">Services</span></a>
+    <a href="#training"><span class="nl-index">02</span><span class="nl-label">Training</span></a>
+    <a href="#approach"><span class="nl-index">03</span><span class="nl-label">Approach</span></a>
+    <a href="#about"><span class="nl-index">04</span><span class="nl-label">About</span></a>
+    <a href="#contact"><span class="nl-index">05</span><span class="nl-label">Contact us</span></a>
+  </div>
+  <div class="nav-links-foot">
+    <span class="mono">Reach us</span>
+    <a href="mailto:info@desplc.org">info@desplc.org</a>
+    <a href="tel:+251977201981">+251 97 720 1981</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero wrap">
+  <div>
+    <div class="eyebrow">Addis Ababa · Ethiopia</div>
+    <h1>Building Ethiopia's <em>digital</em> institutions, from the inside out.</h1>
+    <p class="lead">DES partners with government agencies, banks, and enterprises across Ethiopia to modernize core systems and train the people who run them, designed locally and supported locally.</p>
+    <div class="btn-row">
+      <a href="#contact" class="btn btn-primary">Start a project →</a>
+      <a href="#services" class="btn btn-ghost">Explore services</a>
+    </div>
+  </div>
+  <div class="network reveal">
+    <svg viewBox="0 0 420 420">
+      <g class="net-line active">
+        <path d="M210,210 L90,110" />
+        <path d="M210,210 L330,100" />
+        <path d="M210,210 L340,240" />
+        <path d="M210,210 L230,340" />
+        <path d="M210,210 L80,290" />
+      </g>
+      <g class="net-line">
+        <path d="M90,110 L330,100" />
+        <path d="M330,100 L340,240" />
+        <path d="M340,240 L230,340" />
+        <path d="M230,340 L80,290" />
+        <path d="M80,290 L90,110" />
+      </g>
+      <circle class="net-node net-pulse" cx="90" cy="110" r="5.5"/>
+      <text class="net-label" x="58" y="92">Government</text>
+      <circle class="net-node net-pulse" cx="330" cy="100" r="5.5"/>
+      <text class="net-label" x="304" y="82">Finance</text>
+      <circle class="net-node net-pulse" cx="340" cy="240" r="5.5"/>
+      <text class="net-label" x="316" y="260">Healthcare</text>
+      <circle class="net-node net-pulse" cx="230" cy="340" r="5.5"/>
+      <text class="net-label" x="196" y="365">Education</text>
+      <circle class="net-node net-pulse" cx="80" cy="290" r="5.5"/>
+      <text class="net-label" x="10" y="312">Agriculture</text>
+      <circle class="net-node core" cx="210" cy="210" r="15"/>
+      <text class="net-label core" x="210" y="214">DES</text>
+    </svg>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="wrap stats-grid">
+    <div class="stat"><div class="num">100%</div><div class="lbl">Delivery team based in Ethiopia</div></div>
+    <div class="stat"><div class="num">3,000+</div><div class="lbl">New digital firms opened in Ethiopia</div></div>
+    <div class="stat"><div class="num">900+</div><div class="lbl">Public services digitized in Ethiopia</div></div>
+    <div class="stat"><div class="num">688,000+</div><div class="lbl">Ethiopians trained in digital skills</div></div>
+  </div>
+</div>
+
+<!-- PARTNER STRIP -->
+<div style="border-bottom:1px solid var(--line); background:var(--bg); padding:20px 0;">
+  <div class="wrap" style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; text-align:center;">
+    <span class="mono" style="font-size:11.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em;">In global partnership with</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:14.5px; font-weight:600; color:var(--text-muted);">Infinite Icon Technology</span>
+    <span class="mono" style="font-size:11.5px; color:var(--text-dim);">(Dubai, UAE)</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">What we do</div>
+      <h2>Digital transformation, built for how Ethiopia actually operates</h2>
+      <p>Local infrastructure, connectivity, and language realities aren't edge cases to us; they're the starting point of every system we design.</p>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <span class="service-num">01</span>
+        <h3>Enterprise Software</h3>
+        <p>Custom core systems for revenue, land, civil registry, and case management, built to run reliably on local infrastructure.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num">02</span>
+        <h3>Systems Integration</h3>
+        <p>Connecting legacy platforms, payment rails, and government registries into a single working data pipeline.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num">03</span>
+        <h3>Cloud & Infrastructure</h3>
+        <p>Hybrid and local architectures designed around Ethiopia's connectivity and data residency requirements.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num">04</span>
+        <h3>Data & Analytics</h3>
+        <p>Dashboards and reporting pipelines that turn everyday operational data into decisions leadership can act on.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num">05</span>
+        <h3>Cybersecurity</h3>
+        <p>Risk assessment, hardening, and incident response for institutions holding sensitive citizen and financial data.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num">06</span>
+        <h3>Digital Government</h3>
+        <p>Digital service portals and workflow digitization that cut counter visits and processing time for citizens.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH / LOCAL -->
+<section class="section" id="approach" style="background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap split">
+    <div class="reveal">
+      <div class="section-tag">Why local matters</div>
+      <h2 style="font-size:clamp(24px,3.2vw,36px); margin-bottom:6px;">Solutions designed in Addis, not adapted from abroad</h2>
+      <ul class="check-list">
+        <li><span class="cl-index">01</span><div><b>Amharic and English interfaces</b> as standard, not an addition, across every platform we ship.</div></li>
+        <li><span class="cl-index">02</span><div><b>Onsite support</b> from engineers based locally in Ethiopia, with no offshore ticket queues.</div></li>
+        <li><span class="cl-index">03</span><div><b>Built for real bandwidth</b>, with offline capability and modes designed for low connectivity areas.</div></li>
+        <li><span class="cl-index">04</span><div><b>Regulatory fluency</b> with NBE, INSA, and public procurement requirements from day one.</div></li>
+      </ul>
+    </div>
+    <div class="media-frame reveal" style="aspect-ratio:4/3;">
+      <img src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?auto=format&fit=crop&w=900&q=80" alt="Team of Black tech professionals collaborating on a digital transformation project">
+    </div>
+  </div>
+</section>
+
+<!-- TRAINING -->
+<section class="section" id="training">
+  <div class="wrap">
+    <div class="split" style="margin-bottom:64px;">
+      <div class="media-frame reveal" style="aspect-ratio:4/3;">
+        <img src="https://images.unsplash.com/photo-1573164574397-dd250bc8a598?auto=format&fit=crop&w=900&q=80" alt="Black professionals in a corporate training session">
+      </div>
+      <div class="reveal">
+        <div class="section-tag">Corporate training</div>
+        <h2 style="font-size:clamp(24px,3.2vw,36px);">Upskilling the teams who keep systems running</h2>
+        <p style="color:var(--text-muted); font-size:16px; margin-top:14px;">Every deployment we deliver comes with a training track. Technology only transforms an organization when the people inside it can own it.</p>
+      </div>
+    </div>
+
+    <div class="custom-training reveal">
+      <div class="ct-grid">
+        <div>
+          <h3>Every program is built around you</h3>
+          <p>We do not run a fixed curriculum. Each engagement starts with a conversation about your team's skill gaps, schedule, and goals, and we design the training around that, not the other way around.</p>
+          <a href="#contact" class="btn btn-primary" style="margin-top:24px;">Discuss your training needs →</a>
+        </div>
+        <div class="ct-tags">
+          <span class="tag">IT & Systems Administration</span>
+          <span class="tag">Data Analysis & Reporting</span>
+          <span class="tag">Cybersecurity Awareness</span>
+          <span class="tag">Digital Leadership</span>
+          <span class="tag">Software & Systems Onboarding</span>
+          <span class="tag">Custom, by request</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" style="background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-tag">How we work</div>
+      <h2>A structured engagement, from assessment to handover</h2>
+    </div>
+    <div class="process reveal">
+      <div class="step"><span class="step-n">01</span><h4>Assess</h4><p>Map current systems, workflows, and constraints onsite.</p></div>
+      <div class="step"><span class="step-n">02</span><h4>Design</h4><p>Architect a solution fit for your infrastructure and users.</p></div>
+      <div class="step"><span class="step-n">03</span><h4>Build</h4><p>Develop and integrate, with regular local checkpoints.</p></div>
+      <div class="step"><span class="step-n">04</span><h4>Train</h4><p>Equip staff to operate and maintain the system confidently.</p></div>
+      <div class="step"><span class="step-n">05</span><h4>Support</h4><p>Stay on with local maintenance and continuous improvement.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="wrap split">
+    <div class="media-frame reveal" style="aspect-ratio:4/3;">
+      <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=80" alt="Black professionals working together in a technology office">
+    </div>
+    <div class="reveal">
+      <div class="section-tag">About DES</div>
+      <h2 style="font-size:clamp(24px,3.2vw,36px); margin-bottom:16px;">A PLC built for Ethiopia's next decade</h2>
+      <p style="color:var(--text-muted); font-size:16px; margin-bottom:16px;">Digital Enterprise Solutions PLC was founded on a simple premise: institutions across Ethiopia deserve technology partners who understand the country's regulatory, linguistic, and infrastructural reality as well as they understand the code.</p>
+      <p style="color:var(--text-muted); font-size:16px; margin-bottom:16px;">Headquartered in Addis Ababa, our engineers, trainers, and analysts work directly with public and private organizations across the country, not through intermediaries and not from abroad.</p>
+      <p style="color:var(--text-muted); font-size:16px;">Through our global partnership with <b style="color:var(--text);">Infinite Icon Technology</b> (Dubai, UAE), we bring international engineering standards and technology access to every local engagement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-banner" id="contact">
+  <div class="wrap">
+    <h2>Ready to modernize?</h2>
+    <p>Tell us about your organization and where digital transformation is stalling. We'll respond within one business day.</p>
+    <div class="cta-row">
+      <button type="button" class="btn btn-light" data-open="contactModal">Contact us</button>
+      <button type="button" class="btn btn-ghost" data-open="proposalModal" style="border-color:rgba(255,255,255,0.3); color:#fff;">Request a proposal</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo"><span class="logo-mark"></span><span><span style="color:var(--red);">DES</span> <span style="color:var(--text); font-weight:600;">PLC</span></span></div>
+        <p>Digital Enterprise Solutions PLC, Ethiopia's local partner for digital transformation and corporate training.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <a href="#services">Services</a>
+        <a href="#training">Training</a>
+        <a href="#approach">Approach</a>
+        <a href="#about">About</a>
+      </div>
+      <div class="foot-col">
+        <h5>Services</h5>
+        <a href="#services">Enterprise Software</a>
+        <a href="#services">Cloud & Infrastructure</a>
+        <a href="#services">Cybersecurity</a>
+        <a href="#services">Digital Government</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="mailto:info@desplc.org">info@desplc.org</a>
+        <a href="tel:+251977201981">+251 97 720 1981</a>
+        <p>Addis Ababa, Ethiopia</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Digital Enterprise Solutions PLC. All rights reserved.</span>
+      <span class="mono">DES / EST. ADDIS ABABA</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <h3>Contact us</h3>
+    <p>Tell us a little about what you need. Submitting opens an email to <b style="color:var(--text);">info@desplc.org</b> with your details filled in, or call us directly at <b style="color:var(--text);">+251 97 720 1981</b>.</p>
+    <form id="contactForm">
+      <label>Full name<input type="text" name="name" required></label>
+      <label>Email address<input type="email" name="email" required></label>
+      <label>Organization<input type="text" name="org"></label>
+      <label>Message<textarea name="message" rows="4" required placeholder="What can we help you with?"></textarea></label>
+      <button type="submit" class="btn btn-primary">Send message →</button>
+      <div class="form-note">Opening your email client…</div>
+    </form>
+  </div>
+</div>
+
+<!-- PROPOSAL MODAL -->
+<div class="modal-overlay" id="proposalModal">
+  <div class="modal-box">
+    <button class="modal-close" data-close aria-label="Close">&times;</button>
+    <h3>Request a proposal</h3>
+    <p>Share your project details and we will get back to you within one business day.</p>
+    <form id="proposalForm">
+      <div class="form-row">
+        <label>Full name<input type="text" name="name" required></label>
+        <label>Organization<input type="text" name="org" required></label>
+      </div>
+      <div class="form-row">
+        <label>Email address<input type="email" name="email" required></label>
+        <label>Phone number<input type="tel" name="phone"></label>
+      </div>
+      <div class="form-row">
+        <label>Sector
+          <select name="sector">
+            <option>Government</option>
+            <option>Finance & Banking</option>
+            <option>Healthcare</option>
+            <option>Education</option>
+            <option>Agriculture</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Interested in
+          <select name="interest">
+            <option>Digital transformation</option>
+            <option>Corporate training</option>
+            <option>Both</option>
+          </select>
+        </label>
+      </div>
+      <label>Estimated timeline
+        <select name="timeline">
+          <option>As soon as possible</option>
+          <option>Within 3 months</option>
+          <option>Within 6 months</option>
+          <option>Just exploring options</option>
+        </select>
+      </label>
+      <label>Project details<textarea name="details" rows="4" required placeholder="Tell us about your current systems and goals"></textarea></label>
+      <button type="submit" class="btn btn-primary">Request proposal →</button>
+      <div class="form-note">Opening your email client…</div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('navLinks');
+  const navClose = document.getElementById('navClose');
+
+  function openMenu(){ navLinks.classList.add('open'); burger.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeMenu(){ navLinks.classList.remove('open'); burger.classList.remove('open'); document.body.style.overflow=''; }
+
+  burger.addEventListener('click', () => { navLinks.classList.contains('open') ? closeMenu() : openMenu(); });
+  navClose.addEventListener('click', closeMenu);
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ===== MODALS ===== */
+  function openModal(id){
+    const m = document.getElementById(id);
+    if(!m) return;
+    m.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(overlay){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-open]').forEach(btn => {
+    btn.addEventListener('click', () => openModal(btn.getAttribute('data-open')));
+  });
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(overlay); });
+    overlay.querySelector('[data-close]').addEventListener('click', () => closeModal(overlay));
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(overlay); });
+  });
+
+  function sendAsMail(subject, bodyLines, form, overlay){
+    const body = bodyLines.filter(Boolean).join('\n');
+    const mailto = 'mailto:info@desplc.org?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    const note = form.querySelector('.form-note');
+    if(note) note.classList.add('show');
+    window.location.href = mailto;
+    setTimeout(() => {
+      if(note) note.classList.remove('show');
+      form.reset();
+      closeModal(overlay);
+    }, 1400);
+  }
+
+  const contactForm = document.getElementById('contactForm');
+  contactForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    const f = new FormData(this);
+    const lines = [
+      'Name: ' + f.get('name'),
+      'Email: ' + f.get('email'),
+      f.get('org') ? 'Organization: ' + f.get('org') : '',
+      '',
+      'Message:',
+      f.get('message')
+    ];
+    sendAsMail('Website contact from ' + f.get('name'), lines, this, document.getElementById('contactModal'));
+  });
+
+  const proposalForm = document.getElementById('proposalForm');
+  proposalForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    const f = new FormData(this);
+    const lines = [
+      'Name: ' + f.get('name'),
+      'Organization: ' + f.get('org'),
+      'Email: ' + f.get('email'),
+      f.get('phone') ? 'Phone: ' + f.get('phone') : '',
+      'Sector: ' + f.get('sector'),
+      'Interested in: ' + f.get('interest'),
+      'Estimated timeline: ' + f.get('timeline'),
+      '',
+      'Project details:',
+      f.get('details')
+    ];
+    sendAsMail('Proposal request from ' + f.get('org'), lines, this, document.getElementById('proposalModal'));
+  });
+</script>
+
+</body>
+</html>
