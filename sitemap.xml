@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://des-plc.com/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en-ET" href="https://des-plc.com/"/>
+    <xhtml:link rel="alternate" hreflang="am-ET" href="https://des-plc.com/?lang=am"/>
+    <xhtml:link rel="alternate" hreflang="om-ET" href="https://des-plc.com/?lang=om"/>
+    <xhtml:link rel="alternate" hreflang="ti-ET" href="https://des-plc.com/?lang=ti"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://des-plc.com/"/>
+  </url>
+  <url>
+    <loc>https://des-plc.com/?lang=am</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en-ET" href="https://des-plc.com/"/>
+    <xhtml:link rel="alternate" hreflang="am-ET" href="https://des-plc.com/?lang=am"/>
+    <xhtml:link rel="alternate" hreflang="om-ET" href="https://des-plc.com/?lang=om"/>
+    <xhtml:link rel="alternate" hreflang="ti-ET" href="https://des-plc.com/?lang=ti"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://des-plc.com/"/>
+  </url>
+  <url>
+    <loc>https://des-plc.com/?lang=om</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en-ET" href="https://des-plc.com/"/>
+    <xhtml:link rel="alternate" hreflang="am-ET" href="https://des-plc.com/?lang=am"/>
+    <xhtml:link rel="alternate" hreflang="om-ET" href="https://des-plc.com/?lang=om"/>
+    <xhtml:link rel="alternate" hreflang="ti-ET" href="https://des-plc.com/?lang=ti"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://des-plc.com/"/>
+  </url>
+  <url>
+    <loc>https://des-plc.com/?lang=ti</loc>
+    <lastmod>2026-10-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en-ET" href="https://des-plc.com/"/>
+    <xhtml:link rel="alternate" hreflang="am-ET" href="https://des-plc.com/?lang=am"/>
+    <xhtml:link rel="alternate" hreflang="om-ET" href="https://des-plc.com/?lang=om"/>
+    <xhtml:link rel="alternate" hreflang="ti-ET" href="https://des-plc.com/?lang=ti"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://des-plc.com/"/>
+  </url>
+</urlset>

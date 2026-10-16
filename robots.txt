@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://des-plc.com/sitemap.xml
